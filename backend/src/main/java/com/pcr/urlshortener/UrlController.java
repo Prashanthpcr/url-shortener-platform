@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.URI;
 import java.util.Optional;
@@ -18,6 +19,8 @@ public class UrlController {
 
     @Autowired
     private UrlService urlService;
+    @Autowired
+    private AnalyticsService analyticsService;
 
     // Endpoint to create a new short URL
     @PostMapping("/api/v1/shorten")
@@ -28,17 +31,21 @@ public class UrlController {
 
     // Endpoint to redirect to the long URL
     @GetMapping("/{shortCode}")
-    public ResponseEntity<Void> redirectToLongUrl(@PathVariable String shortCode) {
-        Optional<Url> urlOptional = urlService.getLongUrl(shortCode);
+public ResponseEntity<Void> redirectToLongUrl(@PathVariable String shortCode, HttpServletRequest request) { // <-- Add HttpServletRequest
+    Optional<Url> urlOptional = urlService.getLongUrl(shortCode);
 
-        if (urlOptional.isPresent()) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create(urlOptional.get().getLongUrl()));
-            return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Found redirect
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
-        }
+    if (urlOptional.isPresent()) {
+        Url url = urlOptional.get();
+        // Call the async method. The controller does not wait for this to finish.
+        analyticsService.recordClick(url, request.getRemoteAddr(), request.getHeader("User-Agent"));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(url.getLongUrl()));
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+}
 
     // ... inside UrlController class
     @PostMapping("/api/v1/shorten-batch")
