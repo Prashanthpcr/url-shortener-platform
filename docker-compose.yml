@@ -1,13 +1,49 @@
 services:
+  # The PostgreSQL Database Service
   postgres:
     image: postgres:15
     environment:
       POSTGRES_DB: urlshortener
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-    ports: # <-- THIS IS THE FIX
+    ports:
       - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # The Redis Cache Service
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
+
+  # The Backend Spring Boot Service
+  backend:
+    build:
+      context: ./backend # Tells Docker Compose to build the image from the 'backend' directory
+    ports:
+      - "8080:8080"
+    environment:
+      # These variables are passed into the Spring Boot container
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/urlshortener # Note: we use the service name 'postgres', not 'localhost'
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_REDIS_HOST: redis # Note: we use the service name 'redis', not 'localhost'
+      SPRING_REDIS_PORT: 6379
+      APP_FRONTEND_URL: http://localhost:3000
+    depends_on:
+      # This ensures the database and cache are started before the backend
+      - postgres
+      - redis
+
+  # The Frontend React Service
+  frontend:
+    build:
+      context: ./frontend # Tells Docker Compose to build the image from the 'frontend' directory
+    ports:
+      - "3000:80" # Maps port 3000 on your machine to port 80 (Nginx) in the container
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data: # Defines the persistent storage volume for the database
