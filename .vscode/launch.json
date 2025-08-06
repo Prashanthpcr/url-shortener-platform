@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-UrlshortenerApplication<urlshortener>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.pcr.urlshortener.UrlshortenerApplication",
+      "projectName": "urlshortener",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
