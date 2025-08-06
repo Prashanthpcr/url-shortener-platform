@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Optional;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UrlController {
 
     @Autowired
@@ -35,5 +38,13 @@ public class UrlController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         }
+    }
+
+    // ... inside UrlController class
+    @PostMapping("/api/v1/shorten-batch")
+    public ResponseEntity<List<BatchResponseItem>> shortenBatch(@RequestBody BatchRequest request) {
+        List<BatchResponseItem> response = urlService.shortenBatch(request.getUrls());
+        // 207 Multi-Status indicates partial success
+        return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(response);
     }
 }

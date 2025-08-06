@@ -1,16 +1,21 @@
-package com.pcr.urlshortener;
+package com.pcr.urlshortener; // Make sure this package name matches yours
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable; // Import the Serializable interface
+
 @Entity
 @Table(name = "urls")
-@Data // Lombok: Generates getters, setters, toString, etc.
-@NoArgsConstructor // Lombok: Generates a no-argument constructor
-@AllArgsConstructor // Lombok: Generates a constructor with all arguments
-public class Url {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Url implements Serializable { // Implement the Serializable interface
+
+    // A version number for serialization. It's a good practice to add this.
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
