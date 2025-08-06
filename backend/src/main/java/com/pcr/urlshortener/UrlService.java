@@ -4,13 +4,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
 
 @Service
 public class UrlService {
+
+    @Value("${APP_BACKEND_URL}") // <-- ADD THIS. It injects the env variable
+    private String backendUrl;
 
     @Autowired
     private UrlRepository urlRepository;
@@ -41,7 +44,7 @@ public List<BatchResponseItem> shortenBatch(List<String> urls) {
             Url shortenedUrl = shortenUrl(longUrl);
             results.add(BatchResponseItem.builder()
                     .longUrl(longUrl)
-                    .shortUrl("http://localhost:8080/" + shortenedUrl.getShortCode())
+                    .shortUrl(backendUrl + "/" + shortenedUrl.getShortCode())
                     .success(true)
                     .build());
         } catch (Exception e) {
