@@ -32,7 +32,10 @@ function App() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/shorten-batch', { urls });
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${apiUrl}/api/v1/shorten-batch`, {
+          urls: urls
+      });
       setResults(response.data);
     } catch (err) {
       setError('An error occurred. Please check the server logs and ensure it is running.');
