@@ -9,12 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.URI;
 import java.util.Optional;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${APP_FRONTEND_URL}")
 public class UrlController {
 
     @Autowired
