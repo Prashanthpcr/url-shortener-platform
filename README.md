@@ -1,175 +1,102 @@
-QuickLink — A Full-Stack URL Shortening Service
-A production-grade, full-stack URL shortening application with a React frontend and a containerized Java Spring Boot backend. Deployed on Render with an automated CI/CD pipeline.
+# QuickLink: A Full-Stack URL Shortening Service
 
-🚀 Live Demo
-You can try the live app here:
-https://url-shortener-frontend-fmej.onrender.com
+A **production-grade, full-stack application** providing a comprehensive URL shortening service. Engineered for **scalability** and **high performance**, this platform is built with a modern, decoupled architecture featuring a **React frontend** and a robust, containerized **Java Spring Boot backend API**. The entire system is deployed on **Render** with a fully automated CI/CD pipeline.
 
-Note: Free Render services may "spin down" after inactivity — the first load can be slow.
+---
 
-(Action: replace the screenshot below with a fresh image of your app — see "Screenshots" section.)
+## 🚀 Live Demo
 
+You can use the live application here:  
+**[QuickLink Live Demo](https://url-shortener-frontend-fmej.onrender.com)**
 
-✨ Key Features
-Interactive & Responsive Frontend — React UI for single and bulk URL shortening with a dynamic results display.
+> **Note:** Free tier services on Render may "spin down" after a period of inactivity, so the first load might be slightly slow.
 
-High-Throughput Batch Processing — /api/v1/shorten-batch endpoint supports hundreds of URLs per request and returns detailed 207 Multi-Status responses per URL.
+![App Screenshot](screenshot.png)
+> *(Action: Replace this with a new, updated screenshot of your beautiful application!)*
 
-High-Performance Caching — Redis caches hot short-URL lookups for near-instant redirection and lower DB load.
+---
 
-Automated Cloud Deployment — Git push to main triggers Render auto-deploys for frontend and backend with zero downtime (CI/CD).
+## ✨ Key Features
 
-🏗️ Architecture & Technology Stack
-Architecture: decoupled multi-service (frontend, backend, DB, cache).
+- **Interactive & Responsive Frontend**  
+  A clean, user-friendly interface built with React that allows for seamless bulk URL shortening and a dynamic results display.
 
-mermaid
-Copy
-Edit
+- **High-Throughput Batch Processing**  
+  A powerful API endpoint (`/api/v1/shorten-batch`) capable of shortening hundreds of URLs in a single request, with a detailed `207 Multi-Status` response that reports the status of each individual URL.
+
+- **High-Performance Caching**  
+  Leverages Redis to cache frequently accessed URLs, drastically reducing database load and ensuring near-instantaneous redirection for popular links.
+
+- **Automated Cloud Deployment**  
+  Zero-touch CI/CD pipeline. Any git push to the main branch automatically triggers a build and deployment of the appropriate service (frontend or backend) on Render with zero downtime.
+
+---
+
+## 🏗️ Architecture & Technology Stack
+
+The system is designed as a **decoupled multi-service architecture**, with a distinct separation between the frontend, backend, database, and cache.
+
+```mermaid
 graph TD
     subgraph User
         A[Browser]
     end
 
     subgraph "Render Cloud (Singapore)"
-        B[React Frontend on Static Site] -- API Calls --> C{Java Backend on Web Service}
-        C -- Reads/Writes --> D[PostgreSQL DB]
-        C -- Caches --> E[Redis Cache]
+        B(React Frontend on Static Site) -- API Calls --> C{Java Backend on Web Service};
+        C -- Reads/Writes --> D[PostgreSQL DB];
+        C -- Caches --> E[Redis Cache];
     end
 
     subgraph GitHub
-        F[git push] --> G{Render Auto-Deploy}
-        G -- Deploys --> B
-        G -- Deploys --> C
+        F[git push] --> G{Render Auto-Deploy};
+        G -- Deploys --> B;
+        G -- Deploys --> C;
     end
 
-    A --> B
-Technologies
+    A --> B;
+```
 
-Frontend: React.js, JavaScript (ES6+), HTML5, CSS3, Axios
+---
 
-Backend: Java 17, Spring Boot 3, Spring Web, Spring Data JPA, Spring Cache
+### Category | Technologies
 
-Database & Cache: PostgreSQL, Redis
+| Category            | Technologies                                                                                   |
+|---------------------|-----------------------------------------------------------------------------------------------|
+| **Frontend**        | React.js, JavaScript (ES6+), HTML5, CSS3, Axios                                               |
+| **Backend**         | Java 17, Spring Boot 3, Spring Data JPA, Spring Web, Spring Cache                             |
+| **Database & Cache**| PostgreSQL (persistent storage), Redis (caching)                                              |
+| **DevOps & Cloud**  | Docker, Docker Compose, Nginx, Render (PaaS), CI/CD                                           |
+| **API & Tools**     | REST, Postman, VS Code, Git & GitHub, Yarn                                                    |
 
-DevOps & Cloud: Docker, Docker Compose, Nginx, Render (PaaS), CI/CD
+---
 
-Tools: REST, Postman, VS Code, Git & GitHub, Yarn
+## ⚙️ Local Development
 
-⚙️ Local Development
-Prerequisites
-Docker Desktop (or Docker + docker-compose)
+To run this project on your local machine, you will need **Docker Desktop** installed.
 
-Git
-
-(Optional) Node.js & Yarn if you want to run frontend locally without Docker
-
-Clone
-bash
-Copy
-Edit
+**Clone the repository:**
+```bash
 git clone https://github.com/Prashanthpcr/url-shortener-platform.git
 cd url-shortener-platform
-Run full stack (Docker)
-This docker-compose.yml builds and starts frontend, backend, PostgreSQL and Redis:
+```
 
-bash
-Copy
-Edit
+**Run the entire stack:**  
+The `docker-compose.yml` file will build the frontend and backend images and run them alongside the database and cache.
+```bash
 docker-compose up --build
-Frontend: http://localhost:3000
+```
 
-Backend API: http://localhost:8080
+**Access the application:**
+- Frontend will be available at [http://localhost:3000](http://localhost:3000).
+- Backend API will be available at [http://localhost:8080](http://localhost:8080).
 
-Run services individually (optional)
-Frontend (local, without Docker)
+---
 
-bash
-Copy
-Edit
-cd frontend
-yarn install
-yarn start
-Backend (local, IDE)
+## ✍️ Author
 
-Import backend as a Maven/Gradle project
+**Prashanth Reddy**  
+GitHub: [@Prashanthpcr](https://github.com/Prashanthpcr)  
+LinkedIn: [linkedin.com/in/prashanthpcr-100428187](https://www.linkedin.com/in/prashanthpcr-100428187/)  
 
-Ensure application.yml/application.properties points to local Postgres & Redis
-
-Run as a Spring Boot app (Java 17)
-
-⚠️ Environment Variables / Configuration
-These are typical values — adjust per your environment / Render service settings.
-
-Backend (application.yml or environment vars)
-
-SPRING_DATASOURCE_URL=jdbc:postgresql://<DB_HOST>:5432/<DB_NAME>
-
-SPRING_DATASOURCE_USERNAME=<db_user>
-
-SPRING_DATASOURCE_PASSWORD=<db_pass>
-
-SPRING_REDIS_HOST=<redis_host>
-
-SPRING_REDIS_PORT=<redis_port>
-
-APP_BASE_URL=https://your-production-domain.com (used for generating full short URLs)
-
-Frontend (example .env)
-
-ini
-Copy
-Edit
-VITE_API_BASE_URL=https://your-backend.onrender.com/api/v1
-🔌 API Overview (common endpoints)
-Replace with full, up-to-date API docs for your repo.
-
-POST /api/v1/shorten — Create a single short URL.
-Body
-
-json
-Copy
-Edit
-{ "url": "https://example.com", "customAlias": "optional" }
-POST /api/v1/shorten-batch — Batch shorten URLs (accepts array). Returns 207 Multi-Status with per-item results.
-
-GET /{alias} — Redirects to target URL (HTTP 302 or 301 depending on config).
-
-GET /api/v1/links/{alias} — Get metadata / analytics for a short link.
-
-(Document authentication, rate limits, analytics endpoints, etc. here as needed.)
-
-🧪 Testing
-Use Postman or curl to test API endpoints.
-
-Add unit tests for backend services (Spring Boot + JUnit).
-
-Frontend: run unit & integration tests with your chosen test runner (Jest, RTL, etc.).
-
-♻️ Deployment & CI/CD
-The repository is configured to auto-deploy to Render when commits are pushed to main.
-
-Each service (frontend / backend) is a separate Render service with its own build settings.
-
-Builds are zero-downtime; health checks and readiness probes are recommended for reliable rollouts.
-
-(If you use GitHub Actions, add the workflow file and brief description here.)
-
-📸 Screenshots
-Replace ./docs/screenshot.png with an updated screenshot of your app. To update the README display:
-
-Save a new screenshot to docs/screenshot.png (or update the path in this README).
-
-Commit & push to GitHub — the README will show the new image.
-
-🧾 Troubleshooting & Tips
-If Render’s free tier “spins down” your service, the first request after idle may be slow. Consider a keep-alive or upgrade plan for production SLAs.
-
-For local DB connection issues, verify Docker network and that Postgres container has finished initialization.
-
-Check Redis cache keys with redis-cli if short URLs don’t return cached entries.
-
-✍️ Author
-Prashanth Reddy
-GitHub: @Prashanthpcr
-LinkedIn: linkedin.com/in/your-profile (Action: replace with your actual LinkedIn URL.)
-
+---
