@@ -11,8 +11,7 @@ You can use the live application here:
 
 > **Note:** Free tier services on Render may "spin down" after a period of inactivity, so the first load might be slightly slow.
 
-![App Screenshot](screenshot.png)
-> *(Action: Replace this with a new, updated screenshot of your beautiful application!)*
+![App Screenshot](screenshot.jpg)
 
 ---
 
